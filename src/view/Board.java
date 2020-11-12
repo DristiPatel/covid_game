@@ -12,12 +12,21 @@ import driver.Driver;
 
 public class Board extends JPanel{
 
-    // FIELDS
+    // DOUBLE BUFFERED FIELDS
     private Dimension dimOff;
-	private Image imgOff;
-    private Graphics grpOff;
+	private Image imgStaticOff;
+    private Graphics grpStaticOff;
+    private Image imgMovOff;
+    private Graphics grpMovOff;
     
-	private GameFrame gmf; // they called gameframe with this but we don't have one
+    //GAME FRAME
+    public GameFrame gmf; // they called gameframe with this but we don't have one
+    
+    //BUTTONS
+    private JButton bStart; // start button
+    private JLabel lStart; // start label
+
+    //FONT SETUP
 	public static Font fnt = new Font("Times", Font.BOLD, 20);  // set font size.
     public static Font fntBig = new Font("Times", Font.BOLD + Font.ITALIC, 36);
     private FontMetrics fmt; 
@@ -57,22 +66,48 @@ public class Board extends JPanel{
     public void update(Graphics g){
 
         System.out.println("Updating...");
-        if (grpOff == null || Driver.DIM.width != dimOff.width
-				|| Driver.DIM.height != dimOff.height) {
-			dimOff = Driver.DIM;
-			imgOff = createImage(Driver.DIM.width, Driver.DIM.height);
-			grpOff = imgOff.getGraphics();
-		}
-        //draw the background for entire program
-        grpOff.setColor(Color.WHITE);
-		grpOff.fillRect(0, 0, Driver.DIM.width, Driver.DIM.height);
+        //TODO: add code to change dimensions if we make resizable
         
-        //demo
-        drawMenuScreen(g);
+        
+        //check if game state has changed, update background
+        if (Driver.PREV_GAME_STATE != Driver.CUR_GAME_STATE){
+            
+            imgStaticOff = createImage(Driver.DIM.width, Driver.DIM.height);
+
+            //change background
+            switch(Driver.CUR_GAME_STATE){
+                case START_MENU:
+                    drawMenuScreen(grpStaticOff);       
+                    break;
+                case TUTORIAL:
+                    drawTutorial(grpStaticOff);
+                    break;
+                case GAME:
+                    drawGameBackground(grpStaticOff);
+                    break;
+                case END_SCREEN:
+                    drawEndScreen(grpStaticOff);
+                case NULL:
+                    break;       
+            }
+            g.drawImage(imgStaticOff, 0, 0, this);
+        }
+
+        if (Driver.CUR_GAME_STATE == Driver.gameStates.GAME){
+            //update the graphics of the game
+            //draw people/virus here, draw the already generated array of people objects
+            
+            //bring in array of movable objects
+            
+            //get updated internal values to draw 
+        }    
+        
+        
+        
 
 
-        //draw the buffer image
-        g.drawImage(imgOff, 0, 0, this);
+        //draw the buffer image on the actual graphics context
+    
 
     }
 
@@ -93,10 +128,15 @@ public class Board extends JPanel{
         BufferedImage blueBackground;
         try{
             blueBackground = ImageIO.read(new File("src/view/images/BlueBackground.jpeg"));
-            grpOff.drawImage(blueBackground, 0, 0, 1200, 800, this);
+            grpStaticOff.drawImage(blueBackground, 0, 0, 1200, 800, this);
         }catch (IOException e){
             System.out.println("Error loading image");
         }
+
+        bStart = new JButton();
+        lStart = new JLabel();
+        
+
     
     
         /*
@@ -110,12 +150,22 @@ public class Board extends JPanel{
         
     }
 
-    private void drawTutorial(){
+    private void drawTutorial(Graphics g){
 
     }
 
-    private void drawGameBackground(){
-        
+    public void drawGameBackground(Graphics g){
+        BufferedImage blueBackground;
+        try{
+            blueBackground = ImageIO.read(new File("src/view/images/BlueBackground.jpeg"));
+            grpOff.drawImage(blueBackground, 0, 0, 1200, 800, this);
+        }catch (IOException e){
+            System.out.println("Error loading image");
+        }
+    }
+
+    public void drawEndScreen(Graphics g) {
+        //TODO
     }
 
 }

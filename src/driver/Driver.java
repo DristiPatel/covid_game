@@ -24,6 +24,12 @@ public class Driver implements Runnable, MouseMotionListener, MouseListener, Key
 	private boolean bMuted = true;
     public int score = 0;
 
+    public static enum gameStates{
+        START_MENU, TUTORIAL, GAME, END_SCREEN, NULL;
+    }
+    public static gameStates CUR_GAME_STATE;
+    public static gameStates PREV_GAME_STATE;
+
     public Molecule character; // character playing the game
     public double xCharacter; // x coordinate of the character
     public double yCharacter; // y coordinate of the character
@@ -76,9 +82,19 @@ public class Driver implements Runnable, MouseMotionListener, MouseListener, Key
     }
     
     public void run() {
+
+        //start at menu screen
+        PREV_GAME_STATE = gameStates.NULL;
+        CUR_GAME_STATE = gameStates.START_MENU;
+
         while (Thread.currentThread() == thrAnim) {
+
+            //updates the graphics for the game
             board.update(board.getGraphics());
-            //System.out.println(board.isVisible());
+            
+            //check for events
+
+
         }
 
     }
